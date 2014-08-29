@@ -1,11 +1,16 @@
-var express = require('express')
+var express = require('express');
 var app = express();
+var jade = require('jade');
+
+var fn = jade.compileFile('index.jade');
 
 app.set('port', (process.env.PORT || 5000))
 app.use(express.static(__dirname + '/public'))
 
+var htmlout = fn({});
+
 app.get('/', function(request, response) {
-  response.send('Hello World!')
+  response.send(htmlout)
 })
 
 app.listen(app.get('port'), function() {
