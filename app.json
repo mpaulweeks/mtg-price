@@ -1,0 +1,7 @@
+{
+  "name": "MTG Mana Prices",
+  "description": "A barebones Node.js app using Express 4",
+  "repository": "https://github.com/mpaulweeks/mtg-price",
+  "logo": "http://node-js-sample.herokuapp.com/node.svg",
+  "keywords": []
+}
