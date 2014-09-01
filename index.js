@@ -16,18 +16,14 @@ var cardsFunc = function(response){
 	return sendCards;
 }
 
-var filename_default = 'dump.txt';
-
-app.get('/save', function(request, response) {
-	var cardUrl = 'https://api.deckbrew.com/mtg/cards?type=land';
-	var filename = filename_default;
-	store.saveCardsToFile(cardUrl, filename, function(err, data){
-		response.send('success! ' + data.length + ' cards saved to ' + filename);
+app.get('/refresh', function(request, response) {
+	store.saveCardsToFile(function(err, data){
+		response.send('success! ' + data.cards + ' cards saved to ' + data.filename);
 	});
 })
 
 app.get('/', function(request, response) {
-	store.getFile(filename_default, cardsFunc(response));
+	store.getFile(cardsFunc(response));
 })
 
 app.listen(app.get('port'), function() {
