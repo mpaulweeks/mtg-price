@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var jade = require('jade');
-var store = require('./store.js');
+var store = require('./modules/store.js');
 
 var fn = jade.compileFile('index.jade');
 
