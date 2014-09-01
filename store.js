@@ -54,6 +54,21 @@ var parseTimestamp = function(cards_file){
 	};
 }
 
+var calculateBestPrice = function(cards){
+	cards.forEach(function (c){
+		var lowestPrice;
+		c.editions.forEach(function (ed){
+			if (ed.hasOwnProperty('price')){
+				var editionPrice = ed.price.low;
+				if(!lowestPrice || (lowestPrice > editionPrice)){
+					lowestPrice = editionPrice;
+				}
+			}
+		});
+		c.best_price = lowestPrice;
+	});
+};
+
 module.exports.saveCardsToFile = function (callback){
 	getUrl(cardUrl, function(err, cards){
 // 		cards = addTimestamp(cards);
@@ -74,6 +89,8 @@ module.exports.getFile = function(callback){
 // 			module.exports.saveCardsToFile(function(e,d){});
 // 		}
 // 		return callback(null, JSON.parse(parsed.cards);
-		return callback(null, JSON.parse(data));
+		var cards = JSON.parse(data);
+		calculateBestPrice(cards);
+		return callback(null, cards);
 	});
 }
