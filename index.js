@@ -8,14 +8,26 @@ var fn = jade.compileFile('index.jade');
 app.set('port', (process.env.PORT || 5000))
 app.use(express.static(__dirname + '/public'))
 
-app.get('/', function(request, response) {
-	var cardUrl = 'https://api.deckbrew.com/mtg/cards?oracle={G}&oracle={W}&type=land';
-	store.getUrl(cardUrl, function(err, data){
-		var cards = JSON.parse(data);
+var cardsFunc = function(response){
+	var sendCards = function(err, cards){
 		var htmlout = fn({'cards': cards});
-		response.send(htmlout)
+		response.send(htmlout);
+	}
+	return sendCards;
+}
+
+var filename_default = 'dump.txt';
+
+app.get('/save', function(request, response) {
+	var cardUrl = 'https://api.deckbrew.com/mtg/cards?type=land';
+	var filename = filename_default;
+	store.saveCardsToFile(cardUrl, filename, function(err, data){
+		response.send('success! ' + data.length + ' cards saved to ' + filename);
 	});
-// 	response.send('thinking');
+})
+
+app.get('/', function(request, response) {
+	store.getFile(filename_default, cardsFunc(response));
 })
 
 app.listen(app.get('port'), function() {

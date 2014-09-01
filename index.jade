@@ -2,4 +2,5 @@ h1 Poop on my butt!
 for card in cards
 	h4= card.name
 	for ed in card.editions
-		h5= ed.set_id
+		if (ed.hasOwnProperty('price'))
+			h5= ed.set_id + ' ' + ed.price.low
