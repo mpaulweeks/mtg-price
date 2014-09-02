@@ -35,19 +35,19 @@ module.exports.setCards = function(cards){
 				produces[col] = true;
 			}				
 		});
-		if(hasAny(card.text, [' plains '])){
+		if(hasAny(card.text, [' Plains '])){
 			produces[WHITE] = true;
 		}
-		if(hasAny(card.text, [' island '])){
+		if(hasAny(card.text, [' Island '])){
 			produces[BLUE] = true;
 		}
-		if(hasAny(card.text, [' swamp '])){
+		if(hasAny(card.text, [' Swamp '])){
 			produces[BLACK] = true;
 		}
-		if(hasAny(card.text, [' mountain '])){
+		if(hasAny(card.text, [' Mountain '])){
 			produces[RED] = true;
 		}
-		if(hasAny(card.text, [' forest '])){
+		if(hasAny(card.text, [' Forest '])){
 			produces[GREEN] = true;
 		}
 		card.identity = identity;
