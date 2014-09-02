@@ -1,5 +1,20 @@
-h1 cards cards cards cards cards
-for card in cards
-	h3= card.name
-		span= ' ' + card.best_price_str
-	h4= card.text
+html
+	head
+		link(href='/css/cards.css')
+	body
+		h1 cards cards cards cards cards
+		table
+			thead
+				th
+				th AND
+				th OR
+				th NOT
+			tbody
+				tr G
+				tr X
+				tr X
+				tr X
+		for card in cards
+			h3= card.name
+				span.price= card.best_price_str
+			h4= card.text
