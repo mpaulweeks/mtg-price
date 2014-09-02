@@ -1,6 +1,5 @@
-h1 Poop on my butt!
+h1 cards cards cards cards cards
 for card in cards
-	h4= card.name + ' ' + card.best_price
-	for ed in card.editions
-		if (ed.hasOwnProperty('price'))
-			h5= ed.set_id + ' ' + ed.price.low
+	h3= card.name
+		span= ' ' + card.best_price_str
+	h4= card.text

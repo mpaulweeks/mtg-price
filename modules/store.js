@@ -56,16 +56,17 @@ var parseTimestamp = function(cards_file){
 
 var calculateBestPrice = function(cards){
 	cards.forEach(function (c){
-		var lowestPrice;
+		var best_price;
 		c.editions.forEach(function (ed){
 			if (ed.hasOwnProperty('price')){
-				var editionPrice = ed.price.low;
-				if(!lowestPrice || (lowestPrice > editionPrice)){
-					lowestPrice = editionPrice;
+				var editionPrice = ed.price.median;
+				if(!best_price || (best_price > editionPrice)){
+					best_price = editionPrice;
 				}
 			}
 		});
-		c.best_price = lowestPrice;
+		c.best_price = best_price;
+		c.best_price_str = '$' + (best_price / 100);
 	});
 };
 
