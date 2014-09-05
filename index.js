@@ -64,20 +64,28 @@ var getFilter = function(filterFunc, params){
 };
 
 var createParams = function(request){
-	var params = {
+	var out = {
 		'and': [],
 		'or': [],
 		'not': []
 	};
-	//interpret request
-	return params;
+	var params = request.params;
+	console.log(params);
+	params.forEach(function (name){
+		console.log(name);
+		var parts = name.split('_');
+		if (parts[0] in out){
+			out[parts[0]].push(parts[1]);
+		}
+	});
+	return out;
 };
 
 app.get('/', function(request, response) {
 	sendResponse(response, []);
 });
 
-app.get('/land', function(request, response) {
+app.get('/land?', function(request, response) {
 	var params = createParams(request);
 	store.getLand(cardsFunc(response, getFilter(filterer.produces, params)));
 });
@@ -87,7 +95,7 @@ app.get('/kozilek', function(request, response) {
 });
 
 app.get('/sisay', function(request, response) {
-	store.getLand(cardsFunc(response, getFilter(filterer.edh, azorius)));
+	store.getLand(cardsFunc(response, getFilter(filterer.edh, sisay)));
 });
 
 app.get('/azorius', function(request, response) {
