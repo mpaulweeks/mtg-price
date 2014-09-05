@@ -26,11 +26,12 @@ module.exports.setCards = function(cards){
 		colors.forEach(function (col){
 			identity[col] = false;
 			produces[col] = false;
+			
 			var keywords = [
 				'{' + col + '}',
 				'/' + col + '}',
 				'{' + col + '/'
-			];	
+			];
 			if(hasAny(card.text, keywords)){
 				identity[col] = true;
 				produces[col] = true;

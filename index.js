@@ -82,7 +82,12 @@ app.get('/', function(request, response) {
 	sendResponse(response, []);
 });
 
-app.get('/land?', function(request, response) {
+app.get('/land', function(request, response) {
+	var params = createParams(request);
+	store.getLand(cardsFunc(response, getFilter(params)));
+});
+
+app.get('/edh', function(request, response) {
 	var params = createParams(request);
 	store.getLand(cardsFunc(response, getFilter(params)));
 });
