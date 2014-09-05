@@ -29,18 +29,11 @@ var hasNot = function(source, sub){
 	return result;
 }
 
-module.exports.edh = function(cards, requirements){
-	var func = function(card){
-		return hasNot(card.identity, requirements.not);
-	};
-	return cards.filter(func);
-};
-
-module.exports.produces = function(cards, requirements){
+module.exports.sift = function(cards, requirements){
 	var func = function(card){
 		return hasAll(card.produces, requirements.and)
 			&& hasOne(card.produces, requirements.or)
-			&& hasNot(card.produces, requirements.not);
+			&& hasNot(card.identity, requirements.not);
 	};
 	return cards.filter(func);
 };

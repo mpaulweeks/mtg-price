@@ -51,14 +51,14 @@ var sisay = {
 }
 
 var azorius = {
-	'or': [],
 	'and': ['W','U'],
+	'or': [],
 	'not': []
 }
 
-var getFilter = function(filterFunc, params){
+var getFilter = function(params){
 	var func = function(cards){
-		return filterFunc(cards, params);
+		return filterer.sift(cards, params);
 	};
 	return func;
 };
@@ -69,15 +69,12 @@ var createParams = function(request){
 		'or': [],
 		'not': []
 	};
-	var params = request.params;
-	console.log(params);
-	params.forEach(function (name){
-		console.log(name);
-		var parts = name.split('_');
-		if (parts[0] in out){
-			out[parts[0]].push(parts[1]);
+	var query = request.query;
+	for (key in out) {
+		if (key in query){
+			out[key] = query[key];
 		}
-	});
+	};
 	return out;
 };
 
@@ -87,19 +84,19 @@ app.get('/', function(request, response) {
 
 app.get('/land?', function(request, response) {
 	var params = createParams(request);
-	store.getLand(cardsFunc(response, getFilter(filterer.produces, params)));
+	store.getLand(cardsFunc(response, getFilter(params)));
 });
 
 app.get('/kozilek', function(request, response) {
-	store.getLand(cardsFunc(response, getFilter(filterer.edh, kozilek)));
+	store.getLand(cardsFunc(response, getFilter(kozilek)));
 });
 
 app.get('/sisay', function(request, response) {
-	store.getLand(cardsFunc(response, getFilter(filterer.edh, sisay)));
+	store.getLand(cardsFunc(response, getFilter(sisay)));
 });
 
 app.get('/azorius', function(request, response) {
-	store.getLand(cardsFunc(response, getFilter(filterer.produces, azorius)));
+	store.getLand(cardsFunc(response, getFilter(azorius)));
 });
 
 app.listen(app.get('port'), function() {
