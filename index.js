@@ -10,6 +10,14 @@ var fn = jade.compileFile('index.jade');
 app.set('port', (process.env.PORT || 5000))
 app.use(express.static(__dirname + '/public'))
 
+var sendResponse = function(response, cards){
+	var htmlout = fn({
+		'cards': cards,
+		'colors': gather.getColors()
+	});
+	response.send(htmlout);
+};
+
 var cardsFunc = function(response, filterFunc){
 	var sendCards = function(err, cards){
 		gather.setCards(cards);
@@ -19,8 +27,7 @@ var cardsFunc = function(response, filterFunc){
 		cards.sort(function(a,b){
 			return a.best_price - b.best_price;
 		});
-		var htmlout = fn({'cards': cards});
-		response.send(htmlout);
+		sendResponse(response, cards);
 	}
 	return sendCards;
 }
@@ -49,29 +56,42 @@ var azorius = {
 	'not': []
 }
 
+var getFilter = function(filterFunc, params){
+	var func = function(cards){
+		return filterFunc(cards, params);
+	};
+	return func;
+};
+
+var createParams = function(request){
+	var params = {
+		'and': [],
+		'or': [],
+		'not': []
+	};
+	//interpret request
+	return params;
+};
+
 app.get('/', function(request, response) {
-	store.getFile(cardsFunc(response));
+	sendResponse(response, []);
+});
+
+app.get('/land', function(request, response) {
+	var params = createParams(request);
+	store.getLand(cardsFunc(response, getFilter(filterer.produces, params)));
 });
 
 app.get('/kozilek', function(request, response) {
-	var filterFunc = function(cards){
-		return filterer.edh(cards, kozilek);
-	};
-	store.getFile(cardsFunc(response, filterFunc));
+	store.getLand(cardsFunc(response, getFilter(filterer.edh, kozilek)));
 });
 
 app.get('/sisay', function(request, response) {
-	var filterFunc = function(cards){
-		return filterer.edh(cards, azorius);
-	};
-	store.getFile(cardsFunc(response, filterFunc));
+	store.getLand(cardsFunc(response, getFilter(filterer.edh, azorius)));
 });
 
 app.get('/azorius', function(request, response) {
-	var filterFunc = function(cards){
-		return filterer.produces(cards, azorius);
-	};
-	store.getFile(cardsFunc(response, filterFunc));
+	store.getLand(cardsFunc(response, getFilter(filterer.produces, azorius)));
 });
 
 app.listen(app.get('port'), function() {

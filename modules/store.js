@@ -1,8 +1,10 @@
 var https = require('https');
 var fs = require('fs');
 
-var cardUrl = 'https://api.deckbrew.com/mtg/cards?type=land';
-var filename = 'dump.txt';
+var landUrl = 'https://api.deckbrew.com/mtg/cards?type=land';
+var edhUrl = 'https://api.deckbrew.com/mtg/cards?type=creature&supertype=legendary';
+var landFile = 'land.txt';
+var edhFile = 'edh.txt';
 
 var getUrl_helper = function(url, page, cards, callback){
 	https.get(url + '&page=' + page, function(response){
@@ -52,7 +54,7 @@ var parseTimestamp = function(cards_file){
 		'timestamp': cards_file.substring(0,10),
 		'cards': cards_file.substring(10)
 	};
-}
+};
 
 var calculateBestPrice = function(cards){
 	cards.forEach(function (c){
@@ -71,19 +73,28 @@ var calculateBestPrice = function(cards){
 };
 
 module.exports.saveCardsToFile = function (callback){
-	getUrl(cardUrl, function(err, cards){
+	getUrl(landUrl, function(err, cards){
 // 		cards = addTimestamp(cards);
-		fs.writeFile(filename, JSON.stringify(cards), function(e){
+		fs.writeFile(landFile, JSON.stringify(cards), function(e){
 			return callback(null, {
 				'count': cards.length,
-				'filename': filename
+				'filename': landFile
 			});
 		});
 	});
-}
+	getUrl(edhUrl, function(err, cards){
+// 		cards = addTimestamp(cards);
+		fs.writeFile(edhFile, JSON.stringify(cards), function(e){
+			return callback(null, {
+				'count': cards.length,
+				'filename': edhFile
+			});
+		});
+	});
+};
 
-module.exports.getFile = function(callback){
-	fs.readFile(filename, function(err, data){
+module.exports.getLand = function(callback){
+	fs.readFile(landFile, function(err, data){
 // 		var parsed = parseTimestamp(data);
 // 		if(parsed.timestamp < new Date()){
 // 			// async re-save cards
@@ -94,4 +105,18 @@ module.exports.getFile = function(callback){
 		calculateBestPrice(cards);
 		return callback(null, cards);
 	});
-}
+};
+
+module.exports.getEdh = function(callback){
+	fs.readFile(landFile, function(err, data){
+// 		var parsed = parseTimestamp(data);
+// 		if(parsed.timestamp < new Date()){
+// 			// async re-save cards
+// 			module.exports.saveCardsToFile(function(e,d){});
+// 		}
+// 		return callback(null, JSON.parse(parsed.cards);
+		var cards = JSON.parse(data);
+		calculateBestPrice(cards);
+		return callback(null, cards);
+	});
+};

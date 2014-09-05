@@ -5,6 +5,9 @@ var WHITE = 'W',
 	GREEN = 'G';
 	
 var colors = [WHITE,BLUE,BLACK,RED,GREEN];
+module.exports.getColors = function(){
+	return colors;
+};
 	
 var hasAny = function(text, items){
 	var result = false;
