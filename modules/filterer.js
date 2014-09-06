@@ -1,4 +1,3 @@
-
 var hasAll = function(source, sub){
 	var result = true;
 	sub.forEach(function (col){

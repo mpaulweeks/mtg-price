@@ -1,14 +1,17 @@
 var express = require('express');
 var app = express();
+
 var jade = require('jade');
+var fn = jade.compileFile('index.jade');
+
 var store = require('./modules/store.js');
 var metadata = require('./modules/metadata.js');
 var filterer = require('./modules/filterer.js');
 
-var fn = jade.compileFile('index.jade');
-
 app.set('port', (process.env.PORT || 5000))
 app.use(express.static(__dirname + '/public'))
+
+// helper funcs
 
 var sendResponse = function(response, cards){
 	var htmlout = fn({
@@ -18,7 +21,7 @@ var sendResponse = function(response, cards){
 	response.send(htmlout);
 };
 
-var cardsFunc = function(response, filterFunc){
+var displayLand = function(response, filterFunc){
 	var sendCards = function(err, cards){
 		metadata.updateCards(cards);
 		if(filterFunc){
@@ -29,32 +32,8 @@ var cardsFunc = function(response, filterFunc){
 		});
 		sendResponse(response, cards);
 	}
-	return sendCards;
-}
-
-app.get('/refresh', function(request, response) {
-	store.saveCardsToFile(function(err, data){
-		response.send(data);
-	});
-})
-
-var kozilek = {
-	'and': [],
-	'or': [],
-	'not': ['W','U','B','R','G']
-}
-
-var sisay = {
-	'and': [],
-	'or': ['W','G'],
-	'not': ['U','B','R']
-}
-
-var azorius = {
-	'and': ['W','U'],
-	'or': [],
-	'not': []
-}
+	store.getLand(sendCards);
+};
 
 var getFilter = function(params){
 	var func = function(cards){
@@ -78,30 +57,33 @@ var createParams = function(request){
 	return out;
 };
 
+// listeners
+
+app.get('/refresh', function(request, response) {
+	store.saveCardsToFile(function(err, data){
+		response.send(data);
+	});
+})
+
 app.get('/', function(request, response) {
 	sendResponse(response, []);
 });
 
 app.get('/land', function(request, response) {
 	var params = createParams(request);
-	store.getLand(cardsFunc(response, getFilter(params)));
+	displayLand(response, getFilter(params));
 });
 
-app.get('/edh', function(request, response) {
-	var params = createParams(request);
-	store.getLand(cardsFunc(response, getFilter(params)));
-});
-
-app.get('/kozilek', function(request, response) {
-	store.getLand(cardsFunc(response, getFilter(kozilek)));
-});
-
-app.get('/sisay', function(request, response) {
-	store.getLand(cardsFunc(response, getFilter(sisay)));
-});
-
-app.get('/azorius', function(request, response) {
-	store.getLand(cardsFunc(response, getFilter(azorius)));
+app.get('/edh/:id', function(request, response) {
+	var card_id = request.params.id;
+	store.getEdh(function (err, cards){
+		for(c in cards){
+			if(c[id] == card_id){
+				metadata.updateCard(c);
+				return displayLand(response, getFilter(c.edh_filter));
+			}
+		}
+	});
 });
 
 app.listen(app.get('port'), function() {

@@ -27,6 +27,12 @@ var calculateColors = function(cards){
 			identity[col] = false;
 			produces[col] = false;
 			
+			//edh
+			if(hasAny(card.cost, [col])){
+				identity[col] = true;
+			}
+			
+			//lands
 			var keywords = [
 				'{' + col + '}',
 				'/' + col + '}',
@@ -35,7 +41,8 @@ var calculateColors = function(cards){
 			if(hasAny(card.text, keywords)){
 				identity[col] = true;
 				produces[col] = true;
-			} else if(hasAny(card.text, [' mana of any color '])){
+			} else if (hasAny(card.text, [' mana of any color '])
+					|| hasAny(card.text, [' basic land '])){
 				produces[col] = true;
 			}				
 		});
@@ -59,6 +66,21 @@ var calculateColors = function(cards){
 	});
 };
 
+var calculateEdhFilter = function(cards){
+	cards.forEach(function (card){
+		card.edh_filter = {
+			'and': [],
+			'or': [],
+			'not': []
+		};
+		colors.forEach(function (col){
+			if(!card.identity[col]){
+				card.edh_filter['not'].push(col);
+			}
+		});
+	});
+};
+
 var calculateBestPrice = function(cards){
 	cards.forEach(function (c){
 		var best_price;
@@ -78,4 +100,11 @@ var calculateBestPrice = function(cards){
 module.exports.updateCards = function(cards){
 	calculateBestPrice(cards);
 	calculateColors(cards);
+	calculateEdhFilter(cards);
+};
+	
+module.exports.updateCard = function(card){
+	calculateBestPrice([card]);
+	calculateColors([card]);
+	calculateEdhFilter([card]);
 };
