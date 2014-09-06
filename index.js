@@ -16,7 +16,8 @@ app.use(express.static(__dirname + '/public'))
 var sendResponse = function(response, cards){
 	var htmlout = fn({
 		'cards': cards,
-		'colors': metadata.getColors()
+		'colors': metadata.getColors(),
+		'formats': metadata.getFormats()
 	});
 	response.send(htmlout);
 };
@@ -46,12 +47,17 @@ var createParams = function(request){
 	var out = {
 		'and': [],
 		'or': [],
-		'not': []
+		'not': [],
+		'format': null
 	};
 	var query = request.query;
 	for (key in out) {
-		if (key in query){
-			out[key] = query[key];
+		if (key in query){		
+			if (key == 'format' && query.format == 'null'){
+				//do nothing
+			} else {
+				out[key] = query[key];
+			}
 		}
 	};
 	return out;

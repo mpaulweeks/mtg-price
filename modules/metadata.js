@@ -8,6 +8,11 @@ var colors = [WHITE,BLUE,BLACK,RED,GREEN];
 module.exports.getColors = function(){
 	return colors;
 };
+
+var formats = ["commander","legacy","modern","standard","vintage"];
+module.exports.getFormats = function(){
+	return formats;
+};
 	
 var hasAny = function(text, items){
 	var result = false;
@@ -71,7 +76,8 @@ var calculateEdhFilter = function(cards){
 		card.edh_filter = {
 			'and': [],
 			'or': [],
-			'not': []
+			'not': [],
+			'format': 'commander'
 		};
 		colors.forEach(function (col){
 			if(!card.identity[col]){

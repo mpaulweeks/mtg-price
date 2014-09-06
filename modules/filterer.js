@@ -28,11 +28,21 @@ var hasNot = function(source, sub){
 	return result;
 }
 
+var isLegal = function(card, format){
+	if(!format)
+		return true;		
+	if(format in card.formats && card.formats[format] == 'legal')
+		return true;
+	//else
+	return false;
+}			
+
 module.exports.sift = function(cards, requirements){
 	var func = function(card){
 		return hasAll(card.produces, requirements.and)
 			&& hasOne(card.produces, requirements.or)
-			&& hasNot(card.identity, requirements.not);
+			&& hasNot(card.identity, requirements.not)
+			&& isLegal(card, requirements.format);
 	};
 	return cards.filter(func);
 };
