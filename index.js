@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var jade = require('jade');
 var store = require('./modules/store.js');
-var gather = require('./modules/gather.js');
+var metadata = require('./modules/metadata.js');
 var filterer = require('./modules/filterer.js');
 
 var fn = jade.compileFile('index.jade');
@@ -13,14 +13,14 @@ app.use(express.static(__dirname + '/public'))
 var sendResponse = function(response, cards){
 	var htmlout = fn({
 		'cards': cards,
-		'colors': gather.getColors()
+		'colors': metadata.getColors()
 	});
 	response.send(htmlout);
 };
 
 var cardsFunc = function(response, filterFunc){
 	var sendCards = function(err, cards){
-		gather.setCards(cards);
+		metadata.updateCards(cards);
 		if(filterFunc){
 			cards = filterFunc(cards);
 		}
@@ -34,7 +34,7 @@ var cardsFunc = function(response, filterFunc){
 
 app.get('/refresh', function(request, response) {
 	store.saveCardsToFile(function(err, data){
-		response.send('success! ' + data.cards + ' cards saved to ' + data.filename);
+		response.send(data);
 	});
 })
 

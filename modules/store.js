@@ -32,91 +32,38 @@ var getUrl = function(url, callback){
 	getUrl_helper(url, 0, [], callback);
 };
 
-var formatDigits = function(input, expectedDigits){
-	var str = '' + input;
-	while(str.length < expectedDigits){
-		str = '0' + str;
-	}
-	return str;
-};
-
-var addTimestamp = function(cards_raw){
-	var time = new Date();
-	time.setDate(time.getDate() + 1); //record it as tomorrow
-	var stamp = time.getFullYear()
-			+ '-' + formatDigits((time.getMonth() + 1), 2)
-			+ '-' + formatDigits(time.getDate(), 2);
-	return stamp + cards_raw;
-};
-
-var parseTimestamp = function(cards_file){
-	return {
-		'timestamp': cards_file.substring(0,10),
-		'cards': cards_file.substring(10)
-	};
-};
-
-var calculateBestPrice = function(cards){
-	cards.forEach(function (c){
-		var best_price;
-		c.editions.forEach(function (ed){
-			if (ed.hasOwnProperty('price')){
-				var editionPrice = ed.price.median;
-				if(!best_price || (best_price > editionPrice)){
-					best_price = editionPrice;
-				}
-			}
-		});
-		c.best_price = best_price;
-		c.best_price_str = '$' + (best_price / 100);
-	});
-};
-
 module.exports.saveCardsToFile = function (callback){
+	var message = '';
+	var fileCount = 0;
+	var finish = function(mess){
+		fileCount += 1;
+		message += mess;
+		if(fileCount == 2){
+			return callback(null, message);
+		};
+	};
 	getUrl(landUrl, function(err, cards){
-// 		cards = addTimestamp(cards);
 		fs.writeFile(landFile, JSON.stringify(cards), function(e){
-			return callback(null, {
-				'count': cards.length,
-				'filename': landFile
-			});
+			return finish('saved ' + cards.length + ' lands<br/>');
 		});
 	});
 	getUrl(edhUrl, function(err, cards){
-// 		cards = addTimestamp(cards);
 		fs.writeFile(edhFile, JSON.stringify(cards), function(e){
-			return callback(null, {
-				'count': cards.length,
-				'filename': edhFile
-			});
+			return finish('saved ' + cards.length + ' generals<br/>');
 		});
 	});
 };
 
 module.exports.getLand = function(callback){
 	fs.readFile(landFile, function(err, data){
-// 		var parsed = parseTimestamp(data);
-// 		if(parsed.timestamp < new Date()){
-// 			// async re-save cards
-// 			module.exports.saveCardsToFile(function(e,d){});
-// 		}
-// 		return callback(null, JSON.parse(parsed.cards);
 		var cards = JSON.parse(data);
-		calculateBestPrice(cards);
 		return callback(null, cards);
 	});
 };
 
 module.exports.getEdh = function(callback){
 	fs.readFile(landFile, function(err, data){
-// 		var parsed = parseTimestamp(data);
-// 		if(parsed.timestamp < new Date()){
-// 			// async re-save cards
-// 			module.exports.saveCardsToFile(function(e,d){});
-// 		}
-// 		return callback(null, JSON.parse(parsed.cards);
 		var cards = JSON.parse(data);
-		calculateBestPrice(cards);
 		return callback(null, cards);
 	});
 };

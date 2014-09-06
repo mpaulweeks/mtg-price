@@ -19,7 +19,7 @@ var hasAny = function(text, items){
 	return result;
 }
 	
-module.exports.setCards = function(cards){
+var calculateColors = function(cards){
 	cards.forEach(function (card){
 		var identity = {};
 		var produces = {};
@@ -57,4 +57,25 @@ module.exports.setCards = function(cards){
 		card.identity = identity;
 		card.produces = produces;
 	});
+};
+
+var calculateBestPrice = function(cards){
+	cards.forEach(function (c){
+		var best_price;
+		c.editions.forEach(function (ed){
+			if (ed.hasOwnProperty('price')){
+				var editionPrice = ed.price.median;
+				if(!best_price || (best_price > editionPrice)){
+					best_price = editionPrice;
+				}
+			}
+		});
+		c.best_price = best_price;
+		c.best_price_str = '$' + (best_price / 100).toFixed(2);
+	});
+};
+	
+module.exports.updateCards = function(cards){
+	calculateBestPrice(cards);
+	calculateColors(cards);
 };
