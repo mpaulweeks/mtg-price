@@ -50,9 +50,13 @@ html
 							input(type='submit' value='YEAH').btn
 			if general
 				hr
-				h3= general.name
-					span.price= general.best_price_str
-				h4= general.text
+				div.row
+					div.col-md-8.text-left
+						h3= general.name
+							span.price= general.best_price_str
+						h4= general.text
+					div.col-md-4.text-center
+						image(src='sample-card.png')
 			if (similar && similar.length > 0)
 				hr
 				for card in similar
