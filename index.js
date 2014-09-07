@@ -74,14 +74,15 @@ app.get('/land', function(request, response) {
 	displayLand(response, filterParams);
 });
 
-app.get('/edh/:id', function(request, response) {
-	var card_id = request.params.id;
+app.get('/edh', function(request, response) {
+	var card_id = request.query.id;
+	console.log(card_id);
 	repo.getEdh(function (err, cards){
-		for(c in cards){
-			if(c[id] == card_id){
+		cards.forEach(function (c){
+			if(c.id == card_id){
 				return displayLand(response, c.edh_filter);
 			}
-		}
+		});
 	});
 });
 

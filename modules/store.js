@@ -44,12 +44,13 @@ module.exports.saveCardsToFile = function (callback){
 	};
 	getUrl(landUrl, function(err, cards){
 		fs.writeFile(landFile, JSON.stringify(cards), function(e){
-			return finish('saved ' + cards.length + ' lands to file<br/>');
-		});
-	});
-	getUrl(edhUrl, function(err, cards){
-		fs.writeFile(edhFile, JSON.stringify(cards), function(e){
-			return finish('saved ' + cards.length + ' generals to file<br/>');
+			finish('saved ' + cards.length + ' lands to file<br/>');
+			//next
+			getUrl(edhUrl, function(err, cards){
+				fs.writeFile(edhFile, JSON.stringify(cards), function(e){
+					return finish('saved ' + cards.length + ' generals to file<br/>');
+				});
+			});
 		});
 	});
 };
