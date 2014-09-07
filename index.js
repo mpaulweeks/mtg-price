@@ -22,10 +22,10 @@ var sendResponse = function(response, cards){
 	response.send(htmlout);
 };
 
-var displayLand = function(response, filterFunc){
+var displayLand = function(response, filterParams){
 	var sendCards = function(err, cards){
-		if(filterFunc){
-			cards = filterFunc(cards);
+		if(filterParams){
+			cards = filterer.sift(cards, filterParams);
 		}
 		cards.sort(function(a,b){
 			return a.best_price - b.best_price;
@@ -35,14 +35,7 @@ var displayLand = function(response, filterFunc){
 	repo.getLand(sendCards);
 };
 
-var getFilter = function(params){
-	var func = function(cards){
-		return filterer.sift(cards, params);
-	};
-	return func;
-};
-
-var createParams = function(request){
+var parseLandQuery = function(request){
 	var out = {
 		'and': [],
 		'or': [],
@@ -54,10 +47,10 @@ var createParams = function(request){
 		if (key in query){		
 			if (key == 'format' && query.format == 'null'){
 				//do nothing
-			} else if(query[key] instanceof Array) {
-				out[key] = query[key];
-			} else {
+			} else if(out[key] instanceof Array && !(query[key] instanceof Array)) {
 				out[key] = [query[key]];
+			} else {
+				out[key] = query[key];
 			}
 		}
 	};
@@ -77,8 +70,8 @@ app.get('/', function(request, response) {
 });
 
 app.get('/land', function(request, response) {
-	var params = createParams(request);
-	displayLand(response, getFilter(params));
+	var filterParams = parseLandQuery(request);
+	displayLand(response, filterParams);
 });
 
 app.get('/edh/:id', function(request, response) {
@@ -86,7 +79,7 @@ app.get('/edh/:id', function(request, response) {
 	repo.getEdh(function (err, cards){
 		for(c in cards){
 			if(c[id] == card_id){
-				return displayLand(response, getFilter(c.edh_filter));
+				return displayLand(response, c.edh_filter);
 			}
 		}
 	});
