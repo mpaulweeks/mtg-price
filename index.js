@@ -17,8 +17,17 @@ var sendResponse = function(response, data){
 	data = data || {};
 	data.colors = metadata.getColors();
 	data.formats = metadata.getFormats();
-	var htmlout = fn(data);
-	response.send(htmlout);
+	repo.getEdh(function (err, cards){
+		data.edh_auto= []
+		cards.forEach(function (c){
+			data.edh_auto.push({
+				'name': c.name,
+				'id': c.id
+			});
+		});
+		var htmlout = fn(data);
+		response.send(htmlout);
+	});
 };
 
 var displayLand = function(response, filterParams, general){
@@ -86,8 +95,7 @@ app.get('/land', function(request, response) {
 });
 
 app.get('/edh', function(request, response) {
-	var card_id = request.query.id;
-	console.log(card_id);
+	var card_id = request.query.edh_id;
 	repo.getEdh(function (err, cards){
 		cards.forEach(function (c){
 			if(c.id == card_id){

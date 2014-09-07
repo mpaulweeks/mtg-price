@@ -1,6 +1,7 @@
 html
 	head
-		title MTGP		
+		title MTGP
+		script(src='jquery-1.11.1.min.js')
 		link(rel="stylesheet", type="text/css" href="bootstrap.css")
 		link(rel="stylesheet", type="text/css" href="style.css")
 		script(src='bootstrap.js')
@@ -12,7 +13,9 @@ html
 					h3 Search by commander:
 					form(method='get', action='/edh')
 						div.form-group
-							input(type='test' value='k')
+							select(name='edh_id').form-control
+								for c in edh_auto
+									option(value=c.id)=c.name
 						div.form-group
 							input(type='submit' value='PLS').btn
 				div.col-md-2
@@ -61,3 +64,11 @@ html
 					h4= card.name
 						span.price= card.best_price_str
 					h5= card.text
+		script(type='text/javascript').
+			$(document).on('ready', function(){
+				/*
+				$('#edh_auto').autocomplete({
+					source: edh_auto
+				});
+				*/
+			});

@@ -32,11 +32,6 @@ var calculateColors = function(cards){
 			identity[col] = false;
 			produces[col] = false;
 			
-			//edh
-			if(hasAny(card.cost, [col])){
-				identity[col] = true;
-			}
-			
 			//lands
 			var keywords = [
 				'{' + col + '}',
@@ -66,6 +61,28 @@ var calculateColors = function(cards){
 		if(hasAny(card.text, [' Forest '])){
 			produces[GREEN] = true;
 		}
+		
+		//edh
+		if('colors' in card){
+			card.colors.forEach(function (name){
+				if(name === 'white'){
+					identity[WHITE] = true;
+				}
+				if(name === 'blue'){
+					identity[BLUE] = true;
+				}
+				if(name === 'black'){
+					identity[BLACK] = true;
+				}
+				if(name === 'red'){
+					identity[RED] = true;
+				}
+				if(name === 'green'){
+					identity[GREEN] = true;
+				}
+			});
+		}
+					
 		card.identity = identity;
 		card.produces = produces;
 	});
