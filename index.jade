@@ -7,7 +7,7 @@ html
 		script(src='bootstrap.js')
 	body
 		div.container
-			h1 lands lands lands lands lands lands lands lands lands lands 
+			h1.text-center MTG LAND PRICER
 			div.row.text-center
 				div.col-md-5
 					h3 Search by commander:
@@ -19,8 +19,9 @@ html
 						div.form-group
 							input(type='submit' value='PLS').btn
 				div.col-md-2
-					h2 OR
+					h2#header-middle OR
 				div.col-md-5
+					h3 Search by colors:
 					form(method='get', action='/land', role='form')
 						div.form-group
 							table.table.text-center
