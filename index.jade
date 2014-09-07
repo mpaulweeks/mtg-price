@@ -45,7 +45,19 @@ html
 									option(value=form)=form
 						div.form-group
 							input(type='submit' value='YEAH').btn
-			for card in cards
-				h3= card.name
-					span.price= card.best_price_str
-				h4= card.text
+			if general
+				hr
+				h3= general.name
+					span.price= general.best_price_str
+				h4= general.text
+			if (similar && similar.length > 0)
+				hr
+				for card in similar
+					h4= card.name
+						span.price= card.best_price_str
+			if lands
+				hr
+				for card in lands
+					h4= card.name
+						span.price= card.best_price_str
+					h5= card.text

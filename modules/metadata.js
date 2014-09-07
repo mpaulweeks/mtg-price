@@ -84,6 +84,7 @@ var calculateEdhFilter = function(cards){
 				card.edh_filter['not'].push(col);
 			}
 		});
+		card.edh_filter_json = JSON.stringify(card.edh_filter);
 	});
 };
 

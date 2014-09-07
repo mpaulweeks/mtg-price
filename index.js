@@ -13,26 +13,37 @@ app.use(express.static(__dirname + '/public'))
 
 // helper funcs
 
-var sendResponse = function(response, cards){
-	var htmlout = fn({
-		'cards': cards,
-		'colors': metadata.getColors(),
-		'formats': metadata.getFormats()
-	});
+var sendResponse = function(response, data){
+	data = data || {};
+	data.colors = metadata.getColors();
+	data.formats = metadata.getFormats();
+	var htmlout = fn(data);
 	response.send(htmlout);
 };
 
-var displayLand = function(response, filterParams){
-	var sendCards = function(err, cards){
+var displayLand = function(response, filterParams, general){
+	repo.getLand(function(err, lands){
 		if(filterParams){
-			cards = filterer.sift(cards, filterParams);
+			lands = filterer.sift(lands, filterParams);
 		}
-		cards.sort(function(a,b){
+		lands.sort(function(a,b){
 			return a.best_price - b.best_price;
 		});
-		sendResponse(response, cards);
-	}
-	repo.getLand(sendCards);
+		var data = {
+			'lands': lands,
+			'general': general,
+			'similar': []
+		};
+		var filter_json = JSON.stringify(filterParams);
+		repo.getEdh(function (err, edhs){
+			edhs.forEach(function (c){
+				if(c.edh_filter_json === filter_json && c != general){
+					data.similar.push(c);
+				}
+			});
+			sendResponse(response, data);
+		});
+	});
 };
 
 var parseLandQuery = function(request){
@@ -80,7 +91,7 @@ app.get('/edh', function(request, response) {
 	repo.getEdh(function (err, cards){
 		cards.forEach(function (c){
 			if(c.id == card_id){
-				return displayLand(response, c.edh_filter);
+				return displayLand(response, c.edh_filter, c);
 			}
 		});
 	});
