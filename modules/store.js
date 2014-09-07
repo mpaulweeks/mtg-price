@@ -2,8 +2,8 @@ var https = require('https');
 var fs = require('fs');
 
 var landUrl = 'https://api.deckbrew.com/mtg/cards?type=land';
-var edhUrl = 'https://api.deckbrew.com/mtg/cards?type=creature&supertype=legendary';
 var landFile = 'land.txt';
+var edhUrl = 'https://api.deckbrew.com/mtg/cards?type=creature&supertype=legendary';
 var edhFile = 'edh.txt';
 
 var getUrl_helper = function(url, page, cards, callback){
@@ -34,35 +34,37 @@ var getUrl = function(url, callback){
 
 module.exports.saveCardsToFile = function (callback){
 	var message = '';
-	var fileCount = 0;
+	var count = 0;
 	var finish = function(mess){
-		fileCount += 1;
 		message += mess;
-		if(fileCount == 2){
+		count += 1;
+		if(count == 2){
 			return callback(null, message);
 		};
 	};
 	getUrl(landUrl, function(err, cards){
 		fs.writeFile(landFile, JSON.stringify(cards), function(e){
-			return finish('saved ' + cards.length + ' lands<br/>');
+			return finish('saved ' + cards.length + ' lands to file<br/>');
 		});
 	});
 	getUrl(edhUrl, function(err, cards){
 		fs.writeFile(edhFile, JSON.stringify(cards), function(e){
-			return finish('saved ' + cards.length + ' generals<br/>');
+			return finish('saved ' + cards.length + ' generals to file<br/>');
 		});
 	});
 };
 
-module.exports.getLand = function(callback){
+module.exports.getLandFromFile = function(callback){
 	fs.readFile(landFile, function(err, data){
+		console.log('loaded ' + landFile);
 		var cards = JSON.parse(data);
 		return callback(null, cards);
 	});
 };
 
-module.exports.getEdh = function(callback){
-	fs.readFile(landFile, function(err, data){
+module.exports.getEdhFromFile = function(callback){
+	fs.readFile(edhFile, function(err, data){
+		console.log('loaded ' + edhFile);
 		var cards = JSON.parse(data);
 		return callback(null, cards);
 	});

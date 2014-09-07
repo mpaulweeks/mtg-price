@@ -4,7 +4,7 @@ var app = express();
 var jade = require('jade');
 var fn = jade.compileFile('index.jade');
 
-var store = require('./modules/store.js');
+var repo = require('./modules/repo.js');
 var metadata = require('./modules/metadata.js');
 var filterer = require('./modules/filterer.js');
 
@@ -24,7 +24,6 @@ var sendResponse = function(response, cards){
 
 var displayLand = function(response, filterFunc){
 	var sendCards = function(err, cards){
-		metadata.updateCards(cards);
 		if(filterFunc){
 			cards = filterFunc(cards);
 		}
@@ -33,7 +32,7 @@ var displayLand = function(response, filterFunc){
 		});
 		sendResponse(response, cards);
 	}
-	store.getLand(sendCards);
+	repo.getLand(sendCards);
 };
 
 var getFilter = function(params){
@@ -55,8 +54,10 @@ var createParams = function(request){
 		if (key in query){		
 			if (key == 'format' && query.format == 'null'){
 				//do nothing
-			} else {
+			} else if(query[key] instanceof Array) {
 				out[key] = query[key];
+			} else {
+				out[key] = [query[key]];
 			}
 		}
 	};
@@ -66,7 +67,7 @@ var createParams = function(request){
 // listeners
 
 app.get('/refresh', function(request, response) {
-	store.saveCardsToFile(function(err, data){
+	repo.refresh(function(err, data){
 		response.send(data);
 	});
 })
@@ -82,10 +83,9 @@ app.get('/land', function(request, response) {
 
 app.get('/edh/:id', function(request, response) {
 	var card_id = request.params.id;
-	store.getEdh(function (err, cards){
+	repo.getEdh(function (err, cards){
 		for(c in cards){
 			if(c[id] == card_id){
-				metadata.updateCard(c);
 				return displayLand(response, getFilter(c.edh_filter));
 			}
 		}

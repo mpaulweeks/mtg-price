@@ -108,9 +108,3 @@ module.exports.updateCards = function(cards){
 	calculateColors(cards);
 	calculateEdhFilter(cards);
 };
-	
-module.exports.updateCard = function(card){
-	calculateBestPrice([card]);
-	calculateColors([card]);
-	calculateEdhFilter([card]);
-};
