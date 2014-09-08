@@ -20,10 +20,7 @@ var sendResponse = function(response, data){
 	repo.getEdh(function (err, cards){
 		data.edh_auto= []
 		cards.forEach(function (c){
-			data.edh_auto.push({
-				'name': c.name,
-				'id': c.id
-			});
+			data.edh_auto.push(c);
 		});
 		var htmlout = fn(data);
 		response.send(htmlout);

@@ -2,9 +2,11 @@ html
 	head
 		title MTGP
 		script(src='jquery-1.11.1.min.js')
-		link(rel="stylesheet", type="text/css" href="bootstrap.css")
-		link(rel="stylesheet", type="text/css" href="style.css")
+		link(rel='stylesheet', href='bootstrap.css')
+		link(rel='stylesheet', href='style.css')
 		script(src='bootstrap.js')
+		link(rel='stylesheet', href='select2.css')
+		script(src='select2.js')
 	body
 		div.container
 			h1.text-center MTG LAND PRICER
@@ -13,9 +15,14 @@ html
 					h3 Search by commander:
 					form(method='get', action='/edh')
 						div.form-group
-							select(name='edh_id').form-control
+							select(name='edh_id')#edh-auto
 								for c in edh_auto
 									option(value=c.id)=c.name
+							div.hidden
+								for c in edh_auto
+									div(id=c.id)=c.image_url
+						div#edh-auto-current
+							p blank
 						div.form-group
 							input(type='submit' value='PLS').btn
 				div.col-md-2
@@ -70,10 +77,14 @@ html
 						span.price= card.best_price_str
 					h5= card.text
 		script(type='text/javascript').
-			$(document).on('ready', function(){
-				/*
-				$('#edh_auto').autocomplete({
-					source: edh_auto
-				});
-				*/
+			$(document).on('ready', function(){				
+				$('#edh-auto').select2();
+				var imageFunc = function(e){
+					var current_id = $('#edh-auto').val();
+					var img_url = $('#'+current_id).html();
+					//replace this w/ img tag
+					$('#edh-auto-current').html(img_url);
+				};
+				$('#edh-auto').on('change', imageFunc);
+				imageFunc();
 			});

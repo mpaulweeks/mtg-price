@@ -108,16 +108,19 @@ var calculateEdhFilter = function(cards){
 var calculateBestPrice = function(cards){
 	cards.forEach(function (c){
 		var best_price;
+		var image_url;
 		c.editions.forEach(function (ed){
 			if (ed.hasOwnProperty('price')){
 				var editionPrice = ed.price.median;
 				if(!best_price || (best_price > editionPrice)){
 					best_price = editionPrice;
+					image_url = ed.image_url;
 				}
 			}
 		});
 		c.best_price = best_price;
 		c.best_price_str = '$' + (best_price / 100).toFixed(2);
+		c.image_url = image_url;
 	});
 };
 	
