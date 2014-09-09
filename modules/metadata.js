@@ -15,6 +15,19 @@ module.exports.getFormats = function(){
 	return formats;
 };
 	
+var calculateCleanText = function(cards){
+	cards.forEach(function (c){		
+		var clean = c.text;
+		var i_colon = clean.indexOf(':');
+		while(i_colon !== -1){
+			var i_begin = clean.lastIndexOf('.', i_colon);
+			clean = clean.slice(0, i_begin + 1) + clean.slice(i_colon + 1);
+			i_colon = clean.indexOf(':');
+		}
+		c.text_clean = clean;
+	});
+};
+	
 var hasAny = function(text, items){
 	var result = false;
 	items.forEach(function (i){
@@ -33,14 +46,20 @@ var calculateColors = function(cards){
 			identity[col] = false;
 			produces[col] = false;
 			
+			if (hasAny(card.text_clean, [' mana of any color '])){
+				produces[col] = true;
+			}	
+			
 			if(col === COLORLESS){
-				if(card.text.match(/\{\d}/)){
+				if(card.text_clean.match(/\{\d}/)){
 					produces[COLORLESS] = true;
 				}
 				return; //dont do rest
 			}
 			
-			//lands
+			if (hasAny(card.text_clean, [' basic land '])){
+				produces[col] = true;
+			}
 			var keywords = [
 				'{' + col + '}',
 				'/' + col + '}',
@@ -48,25 +67,24 @@ var calculateColors = function(cards){
 			];
 			if(hasAny(card.text, keywords)){
 				identity[col] = true;
+			}			
+			if(hasAny(card.text_clean, keywords)){
 				produces[col] = true;
-			} else if (hasAny(card.text, [' mana of any color '])
-					|| hasAny(card.text, [' basic land '])){
-				produces[col] = true;
-			}				
+			}			
 		});
-		if(hasAny(card.text, [' Plains '])){
+		if(hasAny(card.text_clean, [' Plains '])){
 			produces[WHITE] = true;
 		}
-		if(hasAny(card.text, [' Island '])){
+		if(hasAny(card.text_clean, [' Island '])){
 			produces[BLUE] = true;
 		}
-		if(hasAny(card.text, [' Swamp '])){
+		if(hasAny(card.text_clean, [' Swamp '])){
 			produces[BLACK] = true;
 		}
-		if(hasAny(card.text, [' Mountain '])){
+		if(hasAny(card.text_clean, [' Mountain '])){
 			produces[RED] = true;
 		}
-		if(hasAny(card.text, [' Forest '])){
+		if(hasAny(card.text_clean, [' Forest '])){
 			produces[GREEN] = true;
 		}
 		
@@ -116,12 +134,11 @@ var calculateEdhFilter = function(cards){
 			'format': 'commander'
 		};
 		colors.forEach(function (col){
-			if(card.identity[col]){
+			if(card.identity[col] || col === COLORLESS){
 				card.edh_filter['or'].push(col);
 			} else {
 				card.edh_filter['not'].push(col);
 			}
-			card.edh_filter['or'].push(COLORLESS);
 		});
 		card.edh_filter_json = JSON.stringify(card.edh_filter);
 	});
@@ -147,6 +164,7 @@ var calculateBestPrice = function(cards){
 };
 	
 module.exports.updateCards = function(cards){
+	calculateCleanText(cards);
 	calculateBestPrice(cards);
 	calculateColors(cards);
 	calculateEdhFilter(cards);
