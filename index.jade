@@ -79,6 +79,24 @@ html
 						h4!= general.text_pretty_big
 					div.col-md-4.text-center
 						image.card-image(src=general.image_url)
+			if filter
+				hr
+				div.row
+					div.col-md-12
+						h3 Displaying lands according to this filter
+						p ALL:				
+							for col in filter.and
+								image(src='http://mtgimage.com/symbol/mana/' + col.toString() + '/24.gif')
+						p ANY:
+							for col in filter.or
+								image(src='http://mtgimage.com/symbol/mana/' + col.toString() + '/24.gif')
+						p NOT:
+							for col in filter.not
+								image(src='http://mtgimage.com/symbol/mana/' + col.toString() + '/24.gif')
+						p FORMAT:
+							=filter.format
+						if filter.includeNoMana
+							p + lands that don't produce mana
 			if (similar && similar.length > 0)
 				hr
 				div.row

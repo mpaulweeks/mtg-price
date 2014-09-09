@@ -38,7 +38,8 @@ var displayLand = function(response, filterParams, general){
 		var data = {
 			'lands': lands,
 			'general': general,
-			'similar': []
+			'similar': [],
+			'filter': filterParams
 		};
 		var filter_json = JSON.stringify(filterParams);
 		repo.getEdh(function (err, edhs){
