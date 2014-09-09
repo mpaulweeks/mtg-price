@@ -12,11 +12,11 @@ html
 			h1.text-center MTG LAND PRICER
 			div.row.text-center
 				div.col-md-5
-					h3 Search by commander:
+					h3 Search by commander
 					div.col-md-6
 						div#edh-spacer
 						div.row.form-group
-							label(for='edh_id') Click to type:
+							label(for='edh_id') Click to type
 							select(name='edh_id')#edh-auto.col-md-12
 								for c in edh_auto
 									option(value=c.id)=c.name
@@ -31,7 +31,7 @@ html
 				div.col-md-2
 					h2#header-middle or
 				div.col-md-5
-					h3 Search by colors:
+					h3 Search by colors
 					form(method='get', action='/land', role='form')
 						div.form-group
 							table.table.table-condensed.text-center
@@ -52,11 +52,12 @@ html
 												input(type='checkbox' name='or' value=col)
 											td
 												input(type='checkbox' name='not' value=col)
-						div.row.text-left
-							label(for='includeNoMana').control-label.col-md-9 Include lands that produce no mana:
-							input(type='checkbox' name='includeNoMana')#includeNoMana.col.md-3
+						div.checkbox.text-left
+							label
+								input(type='checkbox' name='includeNoMana')#includeNoMana
+								| Include lands that produce no mana
 						div.form-group.text-left
-							label(for='format').control-label Legal in: 
+							label(for='format').control-label Legal in
 							select(name='format')#format.form-control
 								option(value='null') don't care, show me everything!
 								for form in formats

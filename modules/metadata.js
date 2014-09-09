@@ -168,19 +168,20 @@ var calculateEdhFilter = function(cards){
 var calculateBestPrice = function(cards){
 	cards.forEach(function (c){
 		var best_price;
-		var image_url;
+		var best_edition = c.editions[0];
 		c.editions.forEach(function (ed){
 			if (ed.hasOwnProperty('price')){
 				var editionPrice = ed.price.median;
 				if(!best_price || (best_price > editionPrice)){
 					best_price = editionPrice;
-					image_url = ed.image_url;
+					best_edition = ed;
 				}
 			}
 		});
 		c.best_price = best_price;
 		c.best_price_str = '$' + (best_price / 100).toFixed(2);
-		c.image_url = image_url;
+// 		c.image_url = best_edition.image_url;
+		c.image_url = 'http://mtgimage.com/multiverseid/' + best_edition.multiverse_id + '.jpg';
 	});
 };
 	
