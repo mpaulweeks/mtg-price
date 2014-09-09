@@ -37,6 +37,7 @@ var calculatePrettyText = function(cards){
 		pretty = pretty.replace(/}/gi, '/16.gif" />');
 		pretty = pretty.replace(/[\n]+/gi, '<br/>');
 		c.text_pretty = pretty;
+		c.text_pretty_big = pretty.replace(/\<br\/>/gi, '<br/><br/>');
 	});
 }
 	

@@ -15,17 +15,16 @@ html
 					h3 Search by commander:
 					div.col-md-6
 						div#edh-spacer
-						form(method='get', action='/edh')
-							div.form-group
-								label(for='edh_id') Click to type:
-								select(name='edh_id')#edh-auto
-									for c in edh_auto
-										option(value=c.id)=c.name
-								div.hidden
-									for c in edh_auto
-										div.edh-data(id=c.id)=c.image_url
-							div.form-group
-								input(type='submit' value='GET LANDS').btn
+						div.row.form-group
+							label(for='edh_id') Click to type:
+							select(name='edh_id')#edh-auto.col-md-12
+								for c in edh_auto
+									option(value=c.id)=c.name
+							div.hidden
+								for c in edh_auto
+									div.edh-data(id=c.id)=c.image_url
+						div.row.form-group
+							input(type='submit' value='GET LANDS').btn#edh-go
 					div.col-md-6
 						div.form-group
 							img#edh-auto-current.card-image
@@ -70,7 +69,7 @@ html
 							span.mana-symbol
 								for col in general.identity_pretty
 									image(src='http://mtgimage.com/symbol/mana/' + col.toString() + '/24.gif')
-						h4!= general.text_pretty
+						h4!= general.text_pretty_big
 					div.col-md-4.text-center
 						image.card-image(src=general.image_url)
 			if (similar && similar.length > 0)
@@ -95,7 +94,7 @@ html
 								span.price= card.best_price_str
 			if lands
 				hr
-				div.row#lands
+				div.row
 					for card in lands
 						div.col-md-6.row
 							div.col-md-8
@@ -123,5 +122,10 @@ html
 				};
 				$('#edh-auto').on('change', imageFunc);
 				$('#edh-auto').select2('val', init_id);
-				imageFunc();				
+				imageFunc();
+				
+				$('#edh-go').on('click', function(){
+					var edh_id = $('#edh-auto').val();
+					window.location.href = '/commander/' + edh_id;
+				});
 			});

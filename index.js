@@ -91,8 +91,8 @@ app.get('/land', function(request, response) {
 	displayLand(response, filterParams);
 });
 
-app.get('/edh', function(request, response) {
-	var card_id = request.query.edh_id;
+app.get('/commander/:edh_id', function(request, response) {
+	var card_id = request.params.edh_id;
 	repo.getEdh(function (err, cards){
 		cards.forEach(function (c){
 			if(c.id == card_id){
