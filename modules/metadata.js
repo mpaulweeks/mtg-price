@@ -27,6 +27,18 @@ var calculateCleanText = function(cards){
 		c.text_clean = clean;
 	});
 };
+
+var calculatePrettyText = function(cards){
+	cards.forEach(function (c){
+		var pretty = c.text;
+		pretty = pretty.replace(/\{T}/gi, '<image src="http://mtgimage.com/symbol/other/t/16.gif" />');
+		pretty = pretty.replace(/\{.\/.}/gi, function(str){ return str.slice(0,2)+str.slice(3); });
+		pretty = pretty.replace(/\{/gi, '<image src="http://mtgimage.com/symbol/mana/');
+		pretty = pretty.replace(/}/gi, '/16.gif" />');
+		pretty = pretty.replace(/[\n]+/gi, '<br/>');
+		c.text_pretty = pretty;
+	});
+}
 	
 var hasAny = function(text, items){
 	var result = false;
@@ -165,6 +177,7 @@ var calculateBestPrice = function(cards){
 	
 module.exports.updateCards = function(cards){
 	calculateCleanText(cards);
+	calculatePrettyText(cards);
 	calculateBestPrice(cards);
 	calculateColors(cards);
 	calculateEdhFilter(cards);
