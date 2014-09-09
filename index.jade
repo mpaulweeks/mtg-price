@@ -70,7 +70,7 @@ html
 							span.mana-symbol
 								for col in general.identity_pretty
 									image(src='http://mtgimage.com/symbol/mana/' + col.toString() + '/24.gif')
-						h4= general.text
+						h4.oracle= general.text
 					div.col-md-4.text-center
 						image.card-image(src=general.image_url)
 			if (similar && similar.length > 0)
@@ -91,13 +91,22 @@ html
 				for card in lands
 					h4= card.name
 						span.price= card.best_price_str
-					h5= card.text
+					h5.oracle= card.text
 		script(type='text/javascript').
-			$(document).on('ready', function(){
+			$(document).on('ready', function(){	
+				$('.oracle').each(function (){							
+					var body_html = $(this).html();
+					body_html = body_html.replace(/\{T}/gi, '<image src="http://mtgimage.com/symbol/other/t/16.gif" />');
+					body_html = body_html.replace(/\{.\/.}/gi, function(str){ return str.slice(0,2)+str.slice(3); });
+					body_html = body_html.replace(/\{/gi, '<image src="http://mtgimage.com/symbol/mana/');
+					body_html = body_html.replace(/}/gi, '/16.gif" />');
+					$(this).html(body_html);
+				});				
+				
 				var all = $('.edh-data');
 				var init_id = all[Math.floor(Math.random() * all.length)].id;
 				var general_info = $('#general-data');
-				if(general_info){
+				if(general_info.length > 0){
 					init_id = general_info.data('id');
 				}
 				console.log(init_id);				
@@ -111,5 +120,5 @@ html
 				};
 				$('#edh-auto').on('change', imageFunc);
 				$('#edh-auto').select2('val', init_id);
-				imageFunc();
+				imageFunc();				
 			});
