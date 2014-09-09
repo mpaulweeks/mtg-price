@@ -2,9 +2,10 @@ var WHITE = 'W',
 	BLUE = 'U',
 	BLACK = 'B',
 	RED = 'R',
-	GREEN = 'G';
+	GREEN = 'G',
+	COLORLESS = '1';
 	
-var colors = [WHITE,BLUE,BLACK,RED,GREEN];
+var colors = [WHITE,BLUE,BLACK,RED,GREEN,COLORLESS];
 module.exports.getColors = function(){
 	return colors;
 };
@@ -28,9 +29,16 @@ var calculateColors = function(cards){
 	cards.forEach(function (card){
 		var identity = {};
 		var produces = {};
-		colors.forEach(function (col){
+		colors.forEach(function (col){		
 			identity[col] = false;
 			produces[col] = false;
+			
+			if(col === COLORLESS){
+				if(card.text.match(/\{\d}/)){
+					produces[COLORLESS] = true;
+				}
+				return; //dont do rest
+			}
 			
 			//lands
 			var keywords = [
@@ -108,9 +116,12 @@ var calculateEdhFilter = function(cards){
 			'format': 'commander'
 		};
 		colors.forEach(function (col){
-			if(!card.identity[col]){
+			if(card.identity[col]){
+				card.edh_filter['or'].push(col);
+			} else {
 				card.edh_filter['not'].push(col);
 			}
+			card.edh_filter['or'].push(COLORLESS);
 		});
 		card.edh_filter_json = JSON.stringify(card.edh_filter);
 	});
