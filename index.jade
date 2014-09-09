@@ -1,6 +1,9 @@
 html
 	head
-		title MTGP
+		title MTG MANA
+			if general
+				=(' - ' + general.name)
+		link(rel='icon', href='/favicon.ico', type='image/x-icon')
 		script(src='/jquery-1.11.1.min.js')
 		link(rel='stylesheet', href='/bootstrap.css')
 		link(rel='stylesheet', href='/style.css')
