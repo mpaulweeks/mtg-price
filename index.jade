@@ -95,10 +95,15 @@ html
 								span.price= card.best_price_str
 			if lands
 				hr
-				for card in lands
-					h4= card.name
-						span.price= card.best_price_str
-					p!= card.text_pretty
+				div.row#lands
+					for card in lands
+						div.col-md-6.row
+							div.col-md-8
+								h4= card.name
+									span.price= card.best_price_str
+								p!= card.text_pretty
+							div.col-md-4
+								img.land-image(src=card.image_url)
 		script(type='text/javascript').
 			$(document).on('ready', function(){
 				var all = $('.edh-data');
