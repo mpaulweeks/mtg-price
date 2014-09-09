@@ -59,12 +59,15 @@ var calculateColors = function(cards){
 			identity[col] = false;
 			produces[col] = false;
 			
-			if (hasAny(card.text_clean, [' mana of any color '])){
+			if(hasAny(card.text_clean, [' mana of any color'])
+			|| hasAny(card.text_clean, [' mana of any one color'])
+			|| hasAny(card.text_clean, [' mana of any type'])
+			|| hasAny(card.text_clean, [' mana of that color'])){
 				produces[col] = true;
 			}	
 			
 			if(col === COLORLESS){
-				if(card.text_clean.match(/\{\d}/)){
+				if(card.text_clean.match(/\{\d|X}/)){
 					produces[COLORLESS] = true;
 				}
 				return; //dont do rest
@@ -85,19 +88,19 @@ var calculateColors = function(cards){
 				produces[col] = true;
 			}			
 		});
-		if(hasAny(card.text_clean, [' Plains '])){
+		if(hasAny(card.text, [' Plains '])){
 			produces[WHITE] = true;
 		}
-		if(hasAny(card.text_clean, [' Island '])){
+		if(hasAny(card.text, [' Island '])){
 			produces[BLUE] = true;
 		}
-		if(hasAny(card.text_clean, [' Swamp '])){
+		if(hasAny(card.text, [' Swamp '])){
 			produces[BLACK] = true;
 		}
-		if(hasAny(card.text_clean, [' Mountain '])){
+		if(hasAny(card.text, [' Mountain '])){
 			produces[RED] = true;
 		}
-		if(hasAny(card.text_clean, [' Forest '])){
+		if(hasAny(card.text, [' Forest '])){
 			produces[GREEN] = true;
 		}
 		
@@ -125,12 +128,16 @@ var calculateColors = function(cards){
 		card.identity = identity;
 		card.produces = produces;
 		
+		var produces_anything = false;
 		var identity_pretty = []
 		colors.forEach(function (col){
+			produces_anything = produces_anything || produces[col];
 			if(identity[col]){
 				identity_pretty.push(col);
-			}
+			}			
 		});
+		card.produces_nothing = !produces_anything;
+		
 		if(identity_pretty.length === 0){
 			identity_pretty.push('1');
 		}
