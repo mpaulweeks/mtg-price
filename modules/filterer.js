@@ -1,3 +1,5 @@
+var metadata = require('./metadata.js');
+
 var hasAll = function(source, sub){
 	var result = true;
 	sub.forEach(function (col){
@@ -27,6 +29,14 @@ var hasNot = function(source, sub){
 	});
 	return result;
 }
+
+var hasNotColorless = function(source, sub){
+	if(contains(sub, COLORLESS)){
+		return hasNot(source, [COLORLESS]);
+	}
+	return true;
+}
+	
 
 var contains = function(arr, elm){
 	var out = false;
@@ -58,6 +68,7 @@ module.exports.sift = function(cards, requirements){
 		return hasAll(card.produces, requirements.and)
 			&& hasOne(card.produces, requirements.or)
 			&& hasNot(card.identity, requirements.not)
+			&& hasNotColorless(card.produces, requirements.not)
 			&& isLegal(card, requirements.format)
 			&& nonBasic(card);
 	};

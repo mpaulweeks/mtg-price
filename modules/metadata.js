@@ -1,9 +1,9 @@
-var WHITE = 'W',
-	BLUE = 'U',
-	BLACK = 'B',
-	RED = 'R',
-	GREEN = 'G',
-	COLORLESS = '1';
+WHITE = 'W';
+BLUE = 'U';
+BLACK = 'B';
+RED = 'R';
+GREEN = 'G';
+COLORLESS = '1';
 	
 var colors = [WHITE,BLUE,BLACK,RED,GREEN,COLORLESS];
 module.exports.getColors = function(){
