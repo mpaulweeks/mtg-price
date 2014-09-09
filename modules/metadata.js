@@ -85,6 +85,17 @@ var calculateColors = function(cards){
 					
 		card.identity = identity;
 		card.produces = produces;
+		
+		var identity_pretty = []
+		colors.forEach(function (col){
+			if(identity[col]){
+				identity_pretty.push(col);
+			}
+		});
+		if(identity_pretty.length === 0){
+			identity_pretty.push('1');
+		}
+		card.identity_pretty = identity_pretty;
 	});
 };
 

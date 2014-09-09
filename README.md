@@ -10,4 +10,9 @@ ideas:
 things to do once i have internet:
 - scrape edh generals
 - try timestamp'd files
-- download a copy of jquery -_-
+
+eliahs notes
+- autocard
+- gens and lands both link to buy
+- small land pictures, with columns
+- leave top area, general should match inputted one

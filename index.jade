@@ -1,30 +1,34 @@
 html
 	head
 		title MTGP
-		script(src='jquery-1.11.1.min.js')
-		link(rel='stylesheet', href='bootstrap.css')
-		link(rel='stylesheet', href='style.css')
-		script(src='bootstrap.js')
-		link(rel='stylesheet', href='select2.css')
-		script(src='select2.js')
+		script(src='/jquery-1.11.1.min.js')
+		link(rel='stylesheet', href='/bootstrap.css')
+		link(rel='stylesheet', href='/style.css')
+		script(src='/bootstrap.js')
+		link(rel='stylesheet', href='/select2.css')
+		script(src='/select2.js')
 	body
 		div.container
 			h1.text-center MTG LAND PRICER
 			div.row.text-center
 				div.col-md-5
 					h3 Search by commander:
-					form(method='get', action='/edh')
+					div.col-md-6
+						div#edh-spacer
+						form(method='get', action='/edh')
+							div.form-group
+								label(for='edh_id') Click to type:
+								select(name='edh_id')#edh-auto
+									for c in edh_auto
+										option(value=c.id)=c.name
+								div.hidden
+									for c in edh_auto
+										div.edh-data(id=c.id)=c.image_url
+							div.form-group
+								input(type='submit' value='GET LANDS').btn
+					div.col-md-6
 						div.form-group
-							select(name='edh_id')#edh-auto
-								for c in edh_auto
-									option(value=c.id)=c.name
-							div.hidden
-								for c in edh_auto
-									div(id=c.id)=c.image_url
-						div#edh-auto-current
-							p blank
-						div.form-group
-							input(type='submit' value='PLS').btn
+							img#edh-auto-current.card-image
 				div.col-md-2
 					h2#header-middle or
 				div.col-md-5
@@ -35,13 +39,14 @@ html
 								thead
 									tr
 										th.text-center COLOR
-										th.text-center AND (MAKES)
-										th.text-center OR (MAKES)
-										th.text-center NOT (IDENTITY)
+										th.text-center ALL
+										th.text-center ANY
+										th.text-center NOT
 								tbody
 									for col in colors
 										tr
-											td=col.toString()
+											td
+												image(src='http://mtgimage.com/symbol/mana/' + col.toString() + '/24.gif')
 											td
 												input(type='checkbox' name='and' value=col)
 											td
@@ -55,21 +60,32 @@ html
 								for form in formats
 									option(value=form)=form
 						div.form-group
-							input(type='submit' value='YEAH').btn
+							input(type='submit' value='GET LANDS').btn
 			if general
 				hr
-				div.row
+				div.row#general-data(data-id=general.id)
 					div.col-md-8.text-left
 						h3= general.name
 							span.price= general.best_price_str
+							span.mana-symbol
+								for col in general.identity_pretty
+									image(src='http://mtgimage.com/symbol/mana/' + col.toString() + '/24.gif')
 						h4= general.text
 					div.col-md-4.text-center
-						image(src='sample-card.png')
+						image.card-image(src=general.image_url)
 			if (similar && similar.length > 0)
 				hr
-				for card in similar
-					h4= card.name
-						span.price= card.best_price_str
+				div.row
+					div.col-md-12.text-center
+						if general
+							h3 other commanders
+						else
+							h3 potential commanders
+				div.row#similar
+					div.col-md-12
+						for card in similar
+							h4= card.name
+								span.price= card.best_price_str
 			if lands
 				hr
 				for card in lands
@@ -77,14 +93,23 @@ html
 						span.price= card.best_price_str
 					h5= card.text
 		script(type='text/javascript').
-			$(document).on('ready', function(){				
+			$(document).on('ready', function(){
+				var all = $('.edh-data');
+				var init_id = all[Math.floor(Math.random() * all.length)].id;
+				var general_info = $('#general-data');
+				if(general_info){
+					init_id = general_info.data('id');
+				}
+				console.log(init_id);				
+				
 				$('#edh-auto').select2();
 				var imageFunc = function(e){
 					var current_id = $('#edh-auto').val();
 					var img_url = $('#'+current_id).html();
 					//replace this w/ img tag
-					$('#edh-auto-current').html(img_url);
+					$('#edh-auto-current').attr('src', img_url);
 				};
 				$('#edh-auto').on('change', imageFunc);
+				$('#edh-auto').select2('val', init_id);
 				imageFunc();
 			});

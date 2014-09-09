@@ -3,6 +3,19 @@
 	padding: 0.2em;
 	background-color: lightgreen;
 }
+.mana-symbol {
+	margin-left: 1em;
+}
 #header-middle {
 	line-height: 11em;
+}
+#similar {
+	-moz-column-count: 3;
+	-webkit-column-count: 3;
+}
+.card-image {
+	height: 24em;
+}
+#edh-spacer {
+	height: 7em;
 }
