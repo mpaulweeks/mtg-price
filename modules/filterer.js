@@ -65,13 +65,16 @@ var nonBasic = function(card){
 
 module.exports.sift = function(cards, requirements){
 	var func = function(card){
-		return isLegal(card, requirements.format)
-			&& nonBasic(card) 
-			&& (card.produces_nothing
-			|| (hasAll(card.produces, requirements.and)
-			&& hasOne(card.produces, requirements.or)
-			&& hasNot(card.identity, requirements.not)
-			&& hasNotColorless(card.produces, requirements.not)));
+		return	isLegal(card, requirements.format)
+			&&	nonBasic(card) 
+			&&	(
+					(card.produces_nothing && requirements.includeNoMana)
+				|| 
+					(	hasAll(card.produces, requirements.and)
+					&&	hasOne(card.produces, requirements.or)
+					&&	hasNot(card.identity, requirements.not)
+					&&	hasNotColorless(card.produces, requirements.not))
+				);
 	};
 	return cards.filter(func);
 };

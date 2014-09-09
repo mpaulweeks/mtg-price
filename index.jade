@@ -52,6 +52,9 @@ html
 												input(type='checkbox' name='or' value=col)
 											td
 												input(type='checkbox' name='not' value=col)
+						div.row.text-left
+							label(for='includeNoMana').control-label.col-md-9 Include lands that produce no mana:
+							input(type='checkbox' name='includeNoMana')#includeNoMana.col.md-3
 						div.form-group.text-left
 							label(for='format').control-label Legal in: 
 							select(name='format')#format.form-control

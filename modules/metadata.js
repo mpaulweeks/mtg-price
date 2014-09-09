@@ -151,7 +151,8 @@ var calculateEdhFilter = function(cards){
 			'and': [],
 			'or': [],
 			'not': [],
-			'format': 'commander'
+			'format': 'commander',
+			'includeNoMana': true
 		};
 		colors.forEach(function (col){
 			if(card.identity[col] || col === COLORLESS){

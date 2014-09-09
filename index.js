@@ -57,13 +57,16 @@ var parseLandQuery = function(request){
 		'and': [],
 		'or': [],
 		'not': [],
-		'format': null
+		'format': null,
+		'includeNoMana': false
 	};
 	var query = request.query;
 	for (key in out) {
-		if (key in query){		
-			if (key == 'format' && query.format == 'null'){
+		if (key in query){	
+			if (key == 'format' && query[key] == 'null'){
 				//do nothing
+			} else if (key == 'includeNoMana' && query[key] == 'on'){
+				out[key] = true;
 			} else if(out[key] instanceof Array && !(query[key] instanceof Array)) {
 				out[key] = [query[key]];
 			} else {
