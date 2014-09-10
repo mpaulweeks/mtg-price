@@ -3,7 +3,7 @@ html
 		title MTG MANA
 			if general
 				=(' - ' + general.name)
-		link(rel='icon', href='/favicon.ico', type='image/x-icon')
+		link(rel='shortcut icon', href='/favicon.png')
 		script(src='/jquery-1.11.1.min.js')
 		link(rel='stylesheet', href='/bootstrap.css')
 		link(rel='stylesheet', href='/style.css')
@@ -96,7 +96,7 @@ html
 							for card in similar
 								h4= card.name
 									span.price= card.best_price_str
-			if (filter && !general)
+			else if filterParams
 				hr
 				div.row
 					div.col-md-12
@@ -105,26 +105,26 @@ html
 							div.col-md-6.text-right
 								p ALL:
 							div.col-md-6.text-left
-								for col in filter.and
+								for col in filterParams.and
 									image(src='http://mtgimage.com/symbol/mana/' + col.toString() + '/16.gif')
 						div.row
 							div.col-md-6.text-right
 								p ANY:
 							div.col-md-6.text-left
-								for col in filter.or
+								for col in filterParams.or
 									image(src='http://mtgimage.com/symbol/mana/' + col.toString() + '/16.gif')
 						div.row
 							div.col-md-6.text-right
 								p NOT:
 							div.col-md-6.text-left
-								for col in filter.not
+								for col in filterParams.not
 									image(src='http://mtgimage.com/symbol/mana/' + col.toString() + '/16.gif')
 						div.row
 							div.col-md-6.text-right
 								p FORMAT:
 							div.col-md-6.text-left
-								=filter.format
-						if filter.includeNoMana
+								=filterParams.format
+						if filterParams.includeNoMana
 							div.row
 								div.col-md-12.text-center
 									p + lands that don't produce mana
@@ -141,25 +141,26 @@ html
 								img.land-image(src=card.image_url)
 		script(type='text/javascript').
 			$(document).on('ready', function(){
+				// set default value for EDH dropdown
 				var all = $('.edh-data');
 				var init_id = all[Math.floor(Math.random() * all.length)].id;
 				var general_info = $('#general-data');
 				if(general_info.length > 0){
 					init_id = general_info.data('id');
-				}
-				console.log(init_id);				
+				}		
 				
+				// setup image for EDH dropdown
 				$('#edh-auto').select2();
 				var imageFunc = function(e){
 					var current_id = $('#edh-auto').val();
 					var img_url = $('#'+current_id).html();
-					//replace this w/ img tag
 					$('#edh-auto-current').attr('src', img_url);
 				};
 				$('#edh-auto').on('change', imageFunc);
 				$('#edh-auto').select2('val', init_id);
 				imageFunc();
 				
+				// setup custom route for EDH
 				$('#edh-go').on('click', function(){
 					var edh_id = $('#edh-auto').val();
 					window.location.href = '/commander/' + edh_id;
