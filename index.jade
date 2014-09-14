@@ -17,21 +17,19 @@ html
 			div.row.text-center
 				div.col-md-5
 					h3 Search by commander
-					div.col-md-6
-						div#edh-spacer
-						div.row.form-group
-							label(for='edh_id') Click to type
+					div.col-md-12.form-horizontal
+						div.form-group
 							select(name='edh_id')#edh-auto.col-md-12
+								option
 								for c in edh_auto
 									option(value=c.id)=c.name
 							div.hidden
 								for c in edh_auto
 									div.edh-data(id=c.id)=c.image_url
-						div.row.form-group
-							input(type='submit' value='GET LANDS').btn#edh-go
-					div.col-md-6
 						div.form-group
 							img#edh-auto-current.card-image
+						div.form-group
+							input(type='submit' value='GET LANDS').btn#edh-go
 				div.col-md-2
 					h2#header-middle or
 				div.col-md-5
@@ -154,7 +152,9 @@ html
 				}		
 				
 				// setup image for EDH dropdown
-				$('#edh-auto').select2();
+				$('#edh-auto').select2({				
+					placeholder: "Click to type"
+				});
 				var imageFunc = function(e){
 					var current_id = $('#edh-auto').val();
 					var img_url = $('#'+current_id).html();
