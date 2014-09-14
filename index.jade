@@ -11,6 +11,7 @@ html
 		link(rel='stylesheet', href='/select2.css')
 		script(src='/select2.js')
 		script(src='/lazyload.min.js')
+		meta(name="viewport", content="width=device-width, initial-scale=1")
 	body
 		div.container
 			h1.text-center MTG LAND PRICER
@@ -87,7 +88,7 @@ html
 								span.mana-symbol
 									for col in general.identity_pretty
 										image(src='http://mtgimage.com/symbol/mana/' + col.toString() + '/24.gif')
-								| other commanders
+								span.others other commanders
 								span.mana-symbol
 									for col in general.identity_pretty
 										image(src='http://mtgimage.com/symbol/mana/' + col.toString() + '/24.gif')
@@ -103,27 +104,27 @@ html
 					div.col-md-12
 						h3.text-center Displaying lands according to this filter
 						div.row
-							div.col-md-6.text-right
+							div.col-md-6.col-xs-6.text-right
 								p ALL:
-							div.col-md-6.text-left
+							div.col-md-6.col-xs-6.text-left
 								for col in filterParams.and
 									image(src='http://mtgimage.com/symbol/mana/' + col.toString() + '/16.gif')
 						div.row
-							div.col-md-6.text-right
+							div.col-md-6.col-xs-6.text-right
 								p ANY:
-							div.col-md-6.text-left
+							div.col-md-6.col-xs-6.text-left
 								for col in filterParams.or
 									image(src='http://mtgimage.com/symbol/mana/' + col.toString() + '/16.gif')
 						div.row
-							div.col-md-6.text-right
+							div.col-md-6.col-xs-6.text-right
 								p NOT:
-							div.col-md-6.text-left
+							div.col-md-6.col-xs-6.text-left
 								for col in filterParams.not
 									image(src='http://mtgimage.com/symbol/mana/' + col.toString() + '/16.gif')
 						div.row
-							div.col-md-6.text-right
+							div.col-md-6.col-xs-6.text-right
 								p FORMAT:
-							div.col-md-6.text-left
+							div.col-md-6.col-xs-6.text-left
 								=filterParams.format
 						if filterParams.includeNoMana
 							div.row
@@ -133,14 +134,15 @@ html
 				hr
 				div.row
 					for card in lands
-						div.col-md-6.row
+						div.row.col-md-6
 							div.col-md-8
 								h4
 									a(href=card.gatherer_url)=card.name
 									a(href=card.buy_url).price=card.best_price_str
 								p!= card.text_pretty
 							div.col-md-4
-								img.land-image(data-original=card.image_url).lazy
+								div.land-image-holder
+									img.land-image(data-original=card.image_url).lazy
 		script(type='text/javascript').
 			$(document).on('ready', function(){
 				// set default value for EDH dropdown

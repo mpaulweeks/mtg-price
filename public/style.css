@@ -24,3 +24,16 @@
 #edh-spacer {
 	height: 7em;
 }
+@media only screen and (max-device-width: 600px){
+	.others{
+		display: block;
+	}
+	.land-image-holder {
+		text-align: center;
+		margin-bottom: 1em;
+	}
+	#similar {
+		-moz-column-count: 1;
+		-webkit-column-count: 1;
+	}
+}
