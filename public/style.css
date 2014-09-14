@@ -19,6 +19,7 @@
 }
 .land-image {
 	height: 16em;
+	max-width: 11em;
 }
 #edh-spacer {
 	height: 7em;
