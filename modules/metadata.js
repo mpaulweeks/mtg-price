@@ -180,8 +180,28 @@ var calculateBestPrice = function(cards){
 		});
 		c.best_price = best_price;
 		c.best_price_str = '$' + (best_price / 100).toFixed(2);
-// 		c.image_url = best_edition.image_url;
+		
+		var check = function(ed){
+			return ed.multiverse_id != 0
+				&& ed.multiverse_id != ''
+				&& ed.number != 0
+				&& ed.number != '';
+		}
+		if(!check(best_edition)){
+			c.editions.forEach(function(ed){
+				if(check(ed)){
+					best_edition = ed;
+				}
+			});
+		}
+		
 		c.image_url = 'http://mtgimage.com/multiverseid/' + best_edition.multiverse_id + '.jpg';
+		c.buy_url = 'http://magiccards.info/'
+			+ best_edition.set_id.toLowerCase() + '/en/'
+			+ best_edition.number + '.html';
+		c.gatherer_url = 
+			'http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid='
+			+ best_edition.multiverse_id;
 	});
 };
 	

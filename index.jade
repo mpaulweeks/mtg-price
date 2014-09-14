@@ -72,8 +72,9 @@ html
 				hr
 				div.row#general-data(data-id=general.id)
 					div.col-md-8.text-left
-						h3= general.name
-							span.price= general.best_price_str
+						h3
+							a(href=general.gatherer_url)=general.name
+							a(href=general.buy_url).price=general.best_price_str
 							span.mana-symbol
 								for col in general.identity_pretty
 									image(src='http://mtgimage.com/symbol/mana/' + col.toString() + '/24.gif')
@@ -95,8 +96,9 @@ html
 					div.row#similar
 						div.col-md-12
 							for card in similar
-								h4= card.name
-									span.price= card.best_price_str
+								h4
+									a(href=card.gatherer_url)=card.name
+									a(href=card.buy_url).price=card.best_price_str
 			else if filterParams
 				hr
 				div.row
@@ -135,8 +137,9 @@ html
 					for card in lands
 						div.col-md-6.row
 							div.col-md-8
-								h4= card.name
-									span.price= card.best_price_str
+								h4
+									a(href=card.gatherer_url)=card.name
+									a(href=card.buy_url).price=card.best_price_str
 								p!= card.text_pretty
 							div.col-md-4
 								img.land-image(data-original=card.image_url).lazy
